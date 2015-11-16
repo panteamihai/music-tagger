@@ -42,6 +42,9 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.metroPanel1 = new MetroFramework.Controls.MetroPanel();
+            this.lblAddNewTag = new MetroFramework.Controls.MetroLabel();
+            this.lblSearch = new MetroFramework.Controls.MetroLabel();
+            this.txtSearch = new MetroFramework.Controls.MetroTextBox();
             this.btnAddFile = new MetroFramework.Controls.MetroButton();
             this.btnAddFolder = new MetroFramework.Controls.MetroButton();
             this.btnClearList = new MetroFramework.Controls.MetroButton();
@@ -52,15 +55,12 @@
             this.lblPrecedeBy = new MetroFramework.Controls.MetroLabel();
             this.metroGrid2 = new MetroFramework.Controls.MetroGrid();
             this.grdTags = new MetroFramework.Controls.MetroGrid();
+            this.Tag = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblTags = new MetroFramework.Controls.MetroLabel();
             this.lblFiles = new MetroFramework.Controls.MetroLabel();
             this.grdFiles = new MetroFramework.Controls.MetroGrid();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bsMusicFiles = new System.Windows.Forms.BindingSource(this.components);
-            this.txtSearch = new MetroFramework.Controls.MetroTextBox();
-            this.lblSearch = new MetroFramework.Controls.MetroLabel();
-            this.lblAddNewTag = new MetroFramework.Controls.MetroLabel();
-            this.Tag = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.metroPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.metroGrid3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.metroGrid2)).BeginInit();
@@ -98,6 +98,53 @@
             this.metroPanel1.VerticalScrollbarBarColor = true;
             this.metroPanel1.VerticalScrollbarHighlightOnWheel = false;
             this.metroPanel1.VerticalScrollbarSize = 10;
+            // 
+            // lblAddNewTag
+            // 
+            this.lblAddNewTag.AutoSize = true;
+            this.lblAddNewTag.Location = new System.Drawing.Point(475, 546);
+            this.lblAddNewTag.Name = "lblAddNewTag";
+            this.lblAddNewTag.Size = new System.Drawing.Size(84, 19);
+            this.lblAddNewTag.TabIndex = 16;
+            this.lblAddNewTag.Text = "Add new tag";
+            // 
+            // lblSearch
+            // 
+            this.lblSearch.AutoSize = true;
+            this.lblSearch.Location = new System.Drawing.Point(248, 7);
+            this.lblSearch.Name = "lblSearch";
+            this.lblSearch.Size = new System.Drawing.Size(48, 19);
+            this.lblSearch.TabIndex = 1;
+            this.lblSearch.Text = "Search";
+            // 
+            // txtSearch
+            // 
+            // 
+            // 
+            // 
+            this.txtSearch.CustomButton.Image = null;
+            this.txtSearch.CustomButton.Location = new System.Drawing.Point(235, 1);
+            this.txtSearch.CustomButton.Name = "";
+            this.txtSearch.CustomButton.Size = new System.Drawing.Size(21, 21);
+            this.txtSearch.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.txtSearch.CustomButton.TabIndex = 1;
+            this.txtSearch.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.txtSearch.CustomButton.UseSelectable = true;
+            this.txtSearch.CustomButton.Visible = false;
+            this.txtSearch.Lines = new string[0];
+            this.txtSearch.Location = new System.Drawing.Point(302, 3);
+            this.txtSearch.MaxLength = 32767;
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.PasswordChar = '\0';
+            this.txtSearch.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.txtSearch.SelectedText = "";
+            this.txtSearch.SelectionLength = 0;
+            this.txtSearch.SelectionStart = 0;
+            this.txtSearch.Size = new System.Drawing.Size(257, 23);
+            this.txtSearch.TabIndex = 15;
+            this.txtSearch.UseSelectable = true;
+            this.txtSearch.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.txtSearch.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // btnAddFile
             // 
@@ -322,6 +369,11 @@
             this.grdTags.Size = new System.Drawing.Size(211, 504);
             this.grdTags.TabIndex = 4;
             // 
+            // Tag
+            // 
+            this.Tag.HeaderText = "";
+            this.Tag.Name = "Tag";
+            // 
             // lblTags
             // 
             this.lblTags.AutoSize = true;
@@ -402,58 +454,6 @@
             // 
             this.bsMusicFiles.DataSource = typeof(MusicTagger.MusicFile);
             // 
-            // txtSearch
-            // 
-            // 
-            // 
-            // 
-            this.txtSearch.CustomButton.Image = null;
-            this.txtSearch.CustomButton.Location = new System.Drawing.Point(235, 1);
-            this.txtSearch.CustomButton.Name = "";
-            this.txtSearch.CustomButton.Size = new System.Drawing.Size(21, 21);
-            this.txtSearch.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
-            this.txtSearch.CustomButton.TabIndex = 1;
-            this.txtSearch.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
-            this.txtSearch.CustomButton.UseSelectable = true;
-            this.txtSearch.CustomButton.Visible = false;
-            this.txtSearch.Lines = new string[0];
-            this.txtSearch.Location = new System.Drawing.Point(302, 3);
-            this.txtSearch.MaxLength = 32767;
-            this.txtSearch.Name = "txtSearch";
-            this.txtSearch.PasswordChar = '\0';
-            this.txtSearch.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.txtSearch.SelectedText = "";
-            this.txtSearch.SelectionLength = 0;
-            this.txtSearch.SelectionStart = 0;
-            this.txtSearch.Size = new System.Drawing.Size(257, 23);
-            this.txtSearch.TabIndex = 15;
-            this.txtSearch.UseSelectable = true;
-            this.txtSearch.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-            this.txtSearch.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
-            // 
-            // lblSearch
-            // 
-            this.lblSearch.AutoSize = true;
-            this.lblSearch.Location = new System.Drawing.Point(248, 7);
-            this.lblSearch.Name = "lblSearch";
-            this.lblSearch.Size = new System.Drawing.Size(48, 19);
-            this.lblSearch.TabIndex = 1;
-            this.lblSearch.Text = "Search";
-            // 
-            // lblAddNewTag
-            // 
-            this.lblAddNewTag.AutoSize = true;
-            this.lblAddNewTag.Location = new System.Drawing.Point(475, 546);
-            this.lblAddNewTag.Name = "lblAddNewTag";
-            this.lblAddNewTag.Size = new System.Drawing.Size(84, 19);
-            this.lblAddNewTag.TabIndex = 16;
-            this.lblAddNewTag.Text = "Add new tag";
-            // 
-            // Tag
-            // 
-            this.Tag.HeaderText = "";
-            this.Tag.Name = "Tag";
-            // 
             // ProjectForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -463,7 +463,8 @@
             this.Name = "ProjectForm";
             this.Text = "Music Tagger";
             this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
-            this.Shown += new System.EventHandler(this.ProjectForm_Shown);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ProjectFormClosing);
+            this.Shown += new System.EventHandler(this.ProjectFormShown);
             this.metroPanel1.ResumeLayout(false);
             this.metroPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.metroGrid3)).EndInit();

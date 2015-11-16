@@ -20,7 +20,7 @@ namespace MusicTagger
             using (var ofd = new OpenFileDialog())
             {
                 ofd.Filter = "MusicTagger project files (*.tagger)|*.tagger";
-                ofd.InitialDirectory = @"C:\";
+                ofd.InitialDirectory = Application.StartupPath;
                 ofd.Title = "Please select a tagger project.";
 
                 if (ofd.ShowDialog() == DialogResult.OK)
@@ -40,7 +40,7 @@ namespace MusicTagger
             using (var sfd = new SaveFileDialog())
             {
                 sfd.Filter = "MusicTagger project files (*.tagger)|*.tagger";
-                sfd.InitialDirectory = @"C:\";
+                sfd.InitialDirectory = Application.StartupPath;
                 sfd.Title = "Save the tagger project.";
                 sfd.CreatePrompt = false;
                 sfd.OverwritePrompt = true;
