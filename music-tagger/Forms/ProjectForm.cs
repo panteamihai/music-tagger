@@ -89,8 +89,14 @@ namespace MusicTagger
         private void Initialize()
         {
             _selectedFileChangedObservable = Observable.FromEvent<DataGridViewCellEventHandler, DataGridViewCellEventArgs>(
-                ev => grdFiles.CellEnter += ev,
-                ev => grdFiles.CellEnter -= ev)
+                ev =>
+                {
+                    DataGridViewCellEventHandler handler = (sender, e) => { ev(e); };
+                    return handler;
+
+                },
+                handler => grdFiles.CellEnter += handler,
+                handler => grdFiles.CellEnter -= handler)
                 .Select(GetMusicFileFromGridCell);
 
             var tagsLoader = _selectedFileChangedObservable.Subscribe(GetTagsForFile);
