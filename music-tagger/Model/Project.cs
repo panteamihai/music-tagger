@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace MusicTagger
+namespace MusicTagger.Model
 {
-    public class Project
+    public class Project : IEquatable<Project>
     {
         public string Name { get; set; }
         public string Path { get; set; }
@@ -25,6 +26,16 @@ namespace MusicTagger
         public void LoadFiles(string[] folderPaths)
         {
             Files.AddRange(folderPaths.Select(path => new MusicFile(path)).ToList());
+        }
+
+        public bool Equals(Project other)
+        {
+            if (other == null) return false;
+
+            return 
+                Tags != null && Files != null 
+                && !Tags.Except(other.Tags).Any() 
+                && !Files.Except(other.Files).Any();
         }
     }
 }

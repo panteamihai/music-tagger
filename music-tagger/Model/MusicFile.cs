@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
-namespace MusicTagger
+namespace MusicTagger.Model
 {
-    public class MusicFile
+    public class MusicFile : IEquatable<MusicFile>
     {
         public string Name { get; set; }
         public string Path { get; set; }
@@ -21,6 +23,15 @@ namespace MusicTagger
             Tags = new List<Tag>();
             ContinueWithFiles = new List<MusicFile>();
             PrecedeByFiles = new List<MusicFile>();
+        }
+
+        public bool Equals(MusicFile other)
+        {
+            if (other == null) return false;
+
+            return !Tags.Except(other.Tags).Any() 
+                    && !ContinueWithFiles.Except(other.ContinueWithFiles).Any()
+                    && !PrecedeByFiles.Except(other.PrecedeByFiles).Any();
         }
     }
 }
