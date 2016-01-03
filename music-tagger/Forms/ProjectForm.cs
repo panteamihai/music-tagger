@@ -1,18 +1,18 @@
 ﻿using MetroFramework.Forms;
 using MusicTagger.ExtensionMethods;
 using MusicTagger.Model;
-using Newtonsoft.Json;
 using System;
-using System.IO;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows.Forms;
 
-namespace MusicTagger
+namespace MusicTagger.Forms
 {
     public partial class ProjectForm : MetroForm
     {
-        private readonly CompositeDisposable _selectedFileChangedDisposables = new CompositeDisposable();
+        private readonly CompositeDisposable _disposables = new CompositeDisposable();
+
         private IObservable<MusicFile> _selectedFileChangedObservable;
         private IObservable<Tag> _newTagAddedObservable;
 
@@ -100,22 +100,59 @@ namespace MusicTagger
         {
             grdFiles.DataSource = Project.Files;
 
-            _selectedFileChangedObservable = Observable.FromEvent<DataGridViewCellEventHandler, DataGridViewCellEventArgs>(
-                genericGridHandler =>
-                {
-                    DataGridViewCellEventHandler specificHandler = (sender, e) => { genericGridHandler(e); };
-                    return specificHandler;
+            SetTagsComboDatasource();
 
-                },
-                handler => grdFiles.CellEnter += handler,
-                handler => grdFiles.CellEnter -= handler)
-                .Select(GetMusicFileFromGridCell);
+            var defaultTag = new Tag();
+            colTag.ValueMember = nameof(defaultTag.Name);
+            colTag.DisplayMember = nameof(defaultTag.Name);
+
+            _selectedFileChangedObservable = Observable
+                .FromEvent<DataGridViewCellEventHandler, DataGridViewCellEventArgs>(
+                    genericGridHandler =>
+                    {
+                        DataGridViewCellEventHandler specificHandler = (sender, e) => { genericGridHandler(e); };
+                        return specificHandler;
+
+                    },
+                    handler => grdFiles.CellEnter += handler,
+                    handler => grdFiles.CellEnter -= handler)
+                .Select(GetMusicFileFromGridCell)
+                .Where(musicFile => musicFile != null);
+
+            _newTagAddedObservable =
+                Observable.FromEventPattern(ev => btnAddTag.Click += ev, ev => btnAddTag.Click -= ev)
+                    .Select(e => CreateTag())
+                    .Where(tag => tag != null);
 
             var tagsLoader = _selectedFileChangedObservable.Subscribe(GetTagsForFile);
-            _selectedFileChangedDisposables.Add(tagsLoader);
+            _disposables.Add(tagsLoader);
 
             var linkingFiles = _selectedFileChangedObservable.Subscribe(GetLinkingFiles);
-            _selectedFileChangedDisposables.Add(linkingFiles);
+            _disposables.Add(linkingFiles);
+
+            var updateTags = _newTagAddedObservable.Subscribe(UpdateProjectTags);
+            _disposables.Add(updateTags);
+        }
+
+        private void SetTagsComboDatasource()
+        {
+            bsProjectTags.DataSource = null;
+            bsProjectTags.DataSource = Project.Tags;
+
+            colTag.DataSource = null;
+            colTag.Items.Clear();
+            Project.Tags.ForEach(tag => colTag.Items.Add(tag));
+        }
+
+        private void UpdateProjectTags(Tag tag)
+        {
+            if (!Project.Tags.Contains(tag))
+            {
+                Project.Tags.Add(tag);
+                SetTagsComboDatasource();
+            }
+
+            txtNewTag.Text = string.Empty;
         }
 
         private void GetLinkingFiles(MusicFile file)
@@ -136,12 +173,13 @@ namespace MusicTagger
         {
             if (file == null) return;
 
-            grdTags.DataSource = null;
+            bsTags.DataSource = null;
+            bsTags.DataSource = Project.Files.Contains(file)
+                ? Project.Files.Find(f => f.Equals(file)).Tags
+                : Enumerable.Empty<Tag>();
 
-            if (Project.Files.Contains(file))
-            {
-                grdTags.DataSource = Project.Files.Find(f => f.Equals(file)).Tags;
-            }
+            grdTags.DataSource = null;
+            grdTags.DataSource = bsTags;
         }
 
         private MusicFile GetMusicFileFromGridCell(DataGridViewCellEventArgs e)
@@ -156,57 +194,49 @@ namespace MusicTagger
         {
             if (IsSaveRequired)
             {
-                var dialogResult = MessageBox.Show("The project has been changed. Do you want to save the changes?", "Save project", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button3);
+                var dialogResult = MessageBox.Show(
+                    "The project has been changed. Do you want to save the changes?",
+                    "Save project",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button3);
 
                 if (dialogResult == DialogResult.Yes)
                 {
-                    using (var sfd = new SaveFileDialog())
-                    {
-                        sfd.Filter = "MusicTagger project files (*.tagger)|*.tagger";
-                        sfd.InitialDirectory = Application.StartupPath;
-                        sfd.Title = "Save the tagger project.";
-                        sfd.CreatePrompt = false;
-                        sfd.OverwritePrompt = true;
-                        sfd.AddExtension = true;
+                    var result = ProjectSaver.Save(Project);
 
-                        if (sfd.ShowDialog() == DialogResult.OK)
-                        {
-                            var path = sfd.FileName;
-
-                            var jsonData = JsonConvert.SerializeObject(Project, Formatting.Indented);
-
-                            if (!File.Exists(path))
-                            {
-                                var file = File.Create(path);
-                                file.Close();
-                            }
-
-                            TextWriter tw = new StreamWriter(path, false);
-                            tw.WriteLine(jsonData);
-                            tw.Close();
-
-                            DialogResult = DialogResult.OK;
-                        }
-                    }
+                    DialogResult = result.Item1;
+                    Project = result.Item2;
                 }
-                else if(dialogResult == DialogResult.Cancel)
+
+                if (dialogResult == DialogResult.Cancel || DialogResult == DialogResult.Cancel)
                 {
                     e.Cancel = true;
                     return; //don't dispose
                 }
             }
 
-            _selectedFileChangedDisposables.Dispose();
+            _disposables.Dispose();
         }
 
-        private void AddProjectTagClick(object sender, EventArgs e)
+        private Tag CreateTag()
         {
-            if (string.IsNullOrWhiteSpace(txtNewTag.Text)) return;
+            return string.IsNullOrWhiteSpace(txtNewTag.Text) ? null : new Tag { Name = txtNewTag.Text };
+        }
 
-            var newTag = new Tag { Name = txtNewTag.Text };
+        private void grdTags_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            var combo = e.Control as ComboBox;
+            if (combo != null)
+            {
+                combo.SelectedIndexChanged -= ComboOnSelectedIndexChanged;
+                combo.SelectedIndexChanged += ComboOnSelectedIndexChanged;
+            }
+        }
 
-            if(!Project.Tags.Contains(newTag))
-                Project.Tags.Add(newTag);
+        private void ComboOnSelectedIndexChanged(object sender, EventArgs eventArgs)
+        {
+            
         }
     }
 }

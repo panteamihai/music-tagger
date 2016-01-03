@@ -1,4 +1,4 @@
-﻿namespace MusicTagger
+﻿namespace MusicTagger.Forms
 {
     partial class LoaderForm
     {
@@ -50,7 +50,7 @@
             this.pnlButtons.VerticalScrollbarBarColor = true;
             this.pnlButtons.VerticalScrollbarHighlightOnWheel = false;
             this.pnlButtons.VerticalScrollbarSize = 10;
-            this.pnlButtons.Click += new System.EventHandler(this.CreateNewProjectClick);
+            this.pnlButtons.Click += new System.EventHandler(this.BtnCreateNewProjectClick);
             // 
             // progress
             // 
@@ -71,6 +71,7 @@
             this.btnCreateNewProject.TabIndex = 7;
             this.btnCreateNewProject.Text = "Create New Project";
             this.btnCreateNewProject.UseSelectable = true;
+            this.btnCreateNewProject.Click += new System.EventHandler(this.BtnCreateNewProjectClick);
             // 
             // btnLoadProject
             // 

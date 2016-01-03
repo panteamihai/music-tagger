@@ -15,6 +15,7 @@ namespace MusicTagger.Model
 
         public Project()
         {
+            Tags = new List<Tag>();
             Files = new List<MusicFile>();
         }
 
@@ -36,6 +37,12 @@ namespace MusicTagger.Model
                 Tags != null && Files != null 
                 && !Tags.Except(other.Tags).Any() 
                 && !Files.Except(other.Files).Any();
+        }
+
+        public static Project CreateDefaultProject(string path)
+        {
+            var fi = new FileInfo(path);
+            return new Project { Name = System.IO.Path.GetFileNameWithoutExtension(fi.Name), Path = path };
         }
     }
 }

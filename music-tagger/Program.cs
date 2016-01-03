@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MusicTagger.Forms;
+using System;
 using System.Windows.Forms;
 
 namespace MusicTagger
