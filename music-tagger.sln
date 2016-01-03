@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "music-tagger", "music-tagger\music-tagger.csproj", "{728ABCDE-92BF-4C44-A691-5EE356DB88A1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "music-tagger", "MusicTagger\MusicTagger.csproj", "{728ABCDE-92BF-4C44-A691-5EE356DB88A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
